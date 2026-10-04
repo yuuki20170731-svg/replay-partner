@@ -14,12 +14,17 @@ export function readProgress(storage?: Pick<Storage, 'getItem'>): Progress {
     const p = v.prefs as Record<string, unknown> | undefined;
     return { version: 1, unlocked: Math.max(1, Math.min(10, v.unlocked as number)),
       cleared: v.cleared.filter((n): n is number => Number.isInteger(n) && n >= 1 && n <= 10),
-      prefs: { volume: typeof p?.volume === 'number' ? Math.max(0, Math.min(1, p.volume)) : 0.35,
+      prefs: { volume: typeof p?.volume === 'number' && Number.isFinite(p.volume) ? Math.max(0, Math.min(1, p.volume)) : 0.35,
         mute: typeof p?.mute === 'boolean' ? p.mute : false,
         reducedMotion: typeof p?.reducedMotion === 'boolean' ? p.reducedMotion : false } };
   } catch { return freshProgress(); }
 }
 
 export function writeProgress(value: Progress, storage?: Pick<Storage, 'setItem'>): boolean {
-  try { (storage ?? globalThis.localStorage)?.setItem(KEY, JSON.stringify(value)); return true; } catch { return false; }
+  try {
+    const target = storage ?? globalThis.localStorage;
+    if (!target) return false;
+    target.setItem(KEY, JSON.stringify(value));
+    return true;
+  } catch { return false; }
 }

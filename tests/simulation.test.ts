@@ -112,6 +112,7 @@ describe('progress storage', () => {
     expect(readProgress({ getItem: () => '{bad' })).toEqual(freshProgress());
     expect(readProgress({ getItem: () => '{"version":0}' })).toEqual(freshProgress());
     expect(readProgress({ getItem: () => { throw new Error('denied'); } })).toEqual(freshProgress());
+    expect(readProgress({ getItem: () => '{"version":1,"unlocked":2,"cleared":[1],"prefs":{"volume":1e999}}' }).prefs.volume).toBe(0.35);
     expect(writeProgress(freshProgress(), { setItem: () => { throw new Error('denied'); } })).toBe(false);
   });
 });

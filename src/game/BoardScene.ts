@@ -7,8 +7,9 @@ const CELL = 55, X = 24, Y = 24;
 export class BoardScene extends Phaser.Scene {
   private gfx?: Phaser.GameObjects.Graphics;
   private labels: Phaser.GameObjects.Text[] = [];
+  onReady?: () => void;
   constructor() { super('board'); }
-  create(): void { this.gfx = this.add.graphics(); this.game.canvas.tabIndex = 0; this.cameras.main.setBackgroundColor('#081a24'); this.events.emit('ready'); }
+  create(): void { this.gfx = this.add.graphics(); this.game.canvas.tabIndex = 0; this.cameras.main.setBackgroundColor('#081a24'); this.onReady?.(); }
   private label(text: string, x: number, y: number, color = '#dcecf0', size = 18): void {
     this.labels.push(this.add.text(x, y, text, { fontFamily: 'system-ui, sans-serif', fontSize: `${size}px`, fontStyle: 'bold', color }).setOrigin(0.5));
   }

@@ -5,6 +5,7 @@
 - ビルド: TypeScript等をブラウザ配信用ファイルへまとめる処理。`dist/` が結果。
 - CI: GitHubに変更を送ったときに検証を自動実行する仕組み。設定は作成済みだが、GitHub上の実行は未確認。
 - デプロイ: ビルド結果を公開先へ置く作業。Cloudflareは未接続。
+- 入力キュー: 短く押したキーを次の200ms刻みまで保持し、取りこぼしを防ぐ。長押し中は続けて移動できる。
 
 読む順番: `src/engine/stages.ts` で盤面→`simulation.ts` の `step`、`begin`、`commit`→`tests/simulation.test.ts` の解法→`src/game/BoardScene.ts` の表示→`src/game/main.ts` の入力・画面。
 
