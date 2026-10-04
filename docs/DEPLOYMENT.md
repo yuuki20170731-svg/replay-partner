@@ -1,6 +1,6 @@
 # 公開準備
 
-GitHubリポジトリは [yuuki20170731-svg/replay-partner](https://github.com/yuuki20170731-svg/replay-partner) として2026-10-04にPrivateで作成し、本人の一般公開許可に従ってPublic化した。`main` へpush済み。GitHub Actionsの初回Verifyは成功。Cloudflareは認証・公開待ちで公開URLはまだない。`wrangler deploy --dry-run` は成功した。
+GitHubリポジトリは [yuuki20170731-svg/replay-partner](https://github.com/yuuki20170731-svg/replay-partner) として2026-10-04にPrivateで作成し、本人の一般公開許可に従ってPublic化した。`main` へpush済み。GitHub ActionsのVerifyは成功。Cloudflareは未認証・未公開で公開URLはまだない。通常OAuthとデバイス認証の両方が承認前にタイムアウトした。再開時は本人がブラウザを操作できる状態で `pnpm exec wrangler login --device` を実行し、表示されるコードを5分以内にCloudflareの公式画面へ入力・承認する。`wrangler deploy --dry-run` は成功した。
 
 `main` を本番用、機能追加は別ブランチでレビューする方針。`.github/workflows/ci.yml` はpush/PR時のlint、型検査、テスト、ビルドを定義し、[初回実行](https://github.com/yuuki20170731-svg/replay-partner/actions/runs/37187283168)は成功。Public化は本人が2026-10-04に承認済み。
 

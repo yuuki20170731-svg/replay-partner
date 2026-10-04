@@ -10,6 +10,7 @@
 - `vite build`: 成功。紹介ページとゲームの二つのHTMLを出力。
 - `pnpm install --frozen-lockfile`: 成功。依存関係をロックファイルから再確認。
 - `wrangler deploy --dry-run`: 成功。動画を含む`dist` 内の12ファイルを配信対象として確認。公開操作はしていない。
+- GitHub Actionsの[最新Verify](https://github.com/yuuki20170731-svg/replay-partner/actions/runs/37187646277): Publicリポジトリの`main`でinstall、lint、typecheck、test、buildがすべて成功。
 - Chromeで本番ビルドを開き、画面のボタンとキー操作で全10ステージを順番にクリアし、エピローグ・保存済みクリア数10件を確認。JavaScript例外0件。
 - タイトル、遊び方、ステージ選択、ポーズ、設定、クリア、全クリアを確認。短いキー押下、メニューのフォーカス、Escによる復帰、失焦点時の自動ポーズ、ヒント、記録キャンセル、分身を保持するリトライ、分身削除、全初期化、設定と進行の再読込後の保持を確認。
 - 紹介ページを375、768、1024、1440pxで確認し、横方向のはみ出し0件。ゲーム画面は1366×768と1024×768で盤面と主要UIが縦スクロールなしで収まることを確認。実画面は `public/screenshots/game-stage-2.png`。
