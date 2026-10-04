@@ -4,6 +4,8 @@
 
 制作者: 田中 優輝 / Yuki Tanaka（千葉工業大学 情報変革科学部 認知情報科学科）。
 
+GitHub: [ソースと検証資料](https://github.com/yuuki20170731-svg/replay-partner)。ゲームの公開URLはCloudflareへの配置と動作確認後に追加します。
+
 ![ステージ2の実際のゲーム画面](public/screenshots/game-stage-2.png)
 
 [約59秒の実プレイ動画（無音）](public/videos/demo.webm)も収録しています。
@@ -55,7 +57,7 @@ pnpm preview
 
 ローカルでlint・型検査・単体テスト・本番ビルドを実行し、Chromeで全10ステージを画面操作でクリアしました。具体的な結果は `docs/VERIFICATION.md`。スクリーンリーダーでCanvas内の全プレイを可能にする対応は未実施です。第三者プレイテスト、公開後の検証、実測プレイ時間も未実施です。
 
-GitHubリポジトリとCloudflare公開URLはまだありません。認証・公開範囲の判断後に接続します。空のリンクや架空のURLは置いていません。
+GitHubリポジトリは一般公開済みです。Cloudflareの公開URLはまだありません。架空のURLは置いていません。
 
 ## AI・素材・ライセンス
 

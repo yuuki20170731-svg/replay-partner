@@ -1,11 +1,11 @@
 # 公開準備
 
-ローカルGitリポジトリは初期化済み。GitHubへのpushとCloudflareへの公開は未実施。GitHub CLIの保存済み認証は無効、Wranglerは未認証。公開URLはない。`wrangler deploy --dry-run` は成功した。
+GitHubリポジトリは [yuuki20170731-svg/replay-partner](https://github.com/yuuki20170731-svg/replay-partner) として2026-10-04にPrivateで作成し、本人の一般公開許可に従ってPublic化した。`main` へpush済み。GitHub Actionsの初回Verifyは成功。Cloudflareは認証・公開待ちで公開URLはまだない。`wrangler deploy --dry-run` は成功した。
 
-`main` を本番用、機能追加は別ブランチでレビューする方針。`.github/workflows/ci.yml` はpush/PR時のlint、型検査、テスト、ビルドを定義しているが、GitHub上では未稼働。新規リポジトリはPrivateで確認後、Public化する。本人は2026-10-04に氏名・所属を含む一般公開を承認済み。
+`main` を本番用、機能追加は別ブランチでレビューする方針。`.github/workflows/ci.yml` はpush/PR時のlint、型検査、テスト、ビルドを定義し、[初回実行](https://github.com/yuuki20170731-svg/replay-partner/actions/runs/37187283168)は成功。Public化は本人が2026-10-04に承認済み。
 
-CloudflareはWorkers Static Assetsを利用。`wrangler.jsonc` が `./dist` を配信する。バックエンド、KV、D1は不要。Cloudflare側でGitHub接続後、ビルドコマンド `pnpm install --frozen-lockfile && pnpm build`、本番デプロイコマンド `pnpm exec wrangler deploy`、PreviewはCloudflareのブランチPreviewを設定する。実際に接続する際はダッシュボードの表示と公式手順を再確認する。
+CloudflareはWorkers Static Assetsを利用。`wrangler.jsonc` が `./dist` を配信し、`previews` ブロックも定義する。バックエンド、KV、D1は不要。ログイン後、まず `pnpm exec wrangler preview --name review` でPreviewを作り、動作確認後に `pnpm exec wrangler deploy` で本番公開する。Cloudflare側でGitHub接続する場合のビルドコマンドは `pnpm install --frozen-lockfile && pnpm build`。そのGit連携はダッシュボードで未設定であり、自動デプロイ済みとは扱わない。
 
 確認順: Previewで紹介ページ、ゲーム、記録/再生、保存、スマートフォン幅の案内を確認→mainへ反映→本番URLを再確認。戻すときはCloudflareの以前の動作版を選び、Gitの変更も元に戻す。実際の手順は公開後に記録する。
 
-2026-10-04に確認した公式資料: [Static Assets設定](https://developers.cloudflare.com/workers/static-assets/binding/)、[Wrangler設定](https://developers.cloudflare.com/workers/wrangler/configuration/)、[Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)、[GitHub連携](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)、[Previewブランチ](https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/)。無料枠・条件は公開時にアカウント画面と公式の現行案内で再確認する。
+2026-10-04に確認した公式資料: [Static Assets設定](https://developers.cloudflare.com/workers/static-assets/binding/)、[Wrangler設定](https://developers.cloudflare.com/workers/wrangler/configuration/)、[Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/)、[GitHub連携](https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/)、[Worker Previews](https://developers.cloudflare.com/workers/previews/get-started/)。無料枠・条件は公開時にアカウント画面と公式の現行案内で再確認する。
