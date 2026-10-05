@@ -1,12 +1,25 @@
 # Replay Partner / リプレイ・パートナー
 
-過去の自分の行動を記録・再生し、分身と協力して出口を目指すブラウザ用2Dパズルです。全10ステージ。
+過去の自分の行動を記録・再生し、分身と協力して出口を目指す2Dパズルです。全10部屋。現在の開発対象はUnity製Windows版で、初期のブラウザ版も残しています。
+
+## Unity版を確認する
+
+- [作品紹介・実画面・技術的な工夫](docs/PORTFOLIO.md)
+- [操作とUnityプロジェクトの起動](unity/README.md)
+- [検証済みの範囲と未確認事項](unity/QA.md)
+- [制作物登録用の文章](docs/WORK_REGISTRATION.md)
+
+最新版はRC6。正面／背面の探索者画像と歩行コマを追加しました。[配布ページ](https://github.com/yuuki20170731-svg/replay-partner/releases)でWindows配布候補版を確認できます。展開・再起動・音量保存の実画面確認はRC2時点の結果です。RC6はロジック・画面生成テストとビルドを確認し、全10部屋の手動通しプレイと新版動画は本人希望で保留しています。
+
+Unity 2D版は [unity/README.md](unity/README.md) に追加しました。人間の主人公が石造りの迷宮から脱出する10部屋の作品で、床・壁・門・鍵・石箱・主人公の専用イラスト、脇道の鍵、分身と床スイッチ、状態が分かるUIを実装しています。Unity Editorで10ステージのテストとWindows版ビルド・起動を確認しました。WebGL版はモジュールの管理者承認待ちで未ビルドです。このページで遊べる既存版は引き続きPhaser製です。
 
 制作者: 田中 優輝 / Yuki Tanaka（千葉工業大学 情報変革科学部 認知情報科学科）。
 
 GitHub: [ソースと検証資料](https://github.com/yuuki20170731-svg/replay-partner)。ゲームの公開URLはCloudflareへの配置と動作確認後に追加します。
 
-![ステージ2の実際のゲーム画面](public/screenshots/game-stage-2.png)
+以下の画像・動画・遊び方は初期ブラウザ版のものです。Unity新版の映像ではありません。
+
+![ブラウザ版ステージ2の実際のゲーム画面](public/screenshots/game-stage-2.png)
 
 [約59秒の実プレイ動画（無音）](public/videos/demo.webm)も収録しています。
 
@@ -61,6 +74,6 @@ GitHubリポジトリは一般公開済みです。Cloudflareの公開URLはま�
 
 ## AI・素材・ライセンス
 
-OpenAI Codexを設計、実装、文章、検証補助に利用しました。作者本人の確認・修正範囲は未確定です。画像はCSS/SVG/Phaser描画、効果音はWeb Audio生成で、第三者のゲーム素材は使用していません。コードの公開ライセンスは作者確認前のため未指定です。
+OpenAI Codexを設計、実装、文章、検証補助に利用しました。作者本人の確認・修正範囲は未確定です。ブラウザ版の画像はCSS/SVG/Phaser描画、効果音はWeb Audio生成です。Unity版の迷宮画像はOpenAIの画像生成機能で本作向けに作成し、効果音はコードで生成しました。第三者のゲーム素材は使用していません。コードの公開ライセンスは作者確認前のため未指定です。
 
 詳細: [仕様](docs/REQUIREMENTS.md) · [設計](docs/DESIGN.md) · [アーキテクチャ](docs/ARCHITECTURE.md) · [就活向け説明](docs/PORTFOLIO.md) · [進行状況](docs/STATUS.md)
