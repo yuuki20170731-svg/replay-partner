@@ -7,7 +7,7 @@ namespace ReplayPartner
 {
     public sealed class ReplayApp : MonoBehaviour
     {
-        private enum Screen { Title, Intro, Playing, Pause, Select, Help, Settings, Clear, Complete, Failed, Credits }
+        private enum Screen { Title, Intro, Playing, Pause, Select, Help, Settings, Clear, Complete, Failed, Credits, QuitConfirm }
         private static readonly Color Ink = new Color32(238, 231, 208, 255);
         private static readonly Color Muted = new Color32(163, 169, 159, 255);
         private static readonly Color Night = new Color32(9, 18, 23, 255);
@@ -30,6 +30,7 @@ namespace ReplayPartner
         private Button undoButton;
         private Screen screen = Screen.Title;
         private Screen previous = Screen.Title;
+        private Screen quitReturn = Screen.Title;
         private ReplaySimulation simulation;
         private int stageIndex;
         private int unlocked;
@@ -135,16 +136,20 @@ namespace ReplayPartner
                     pendingBinding = -1; bindingMessage = "キー設定を保存しました。"; Show(Screen.Settings); return;
                 }
             }
+            if (screen == Screen.QuitConfirm)
+            {
+                if (Input.GetKeyDown(KeyCode.Escape)) CancelQuit();
+                else if (Input.GetKeyDown(KeyCode.Return)) QuitGame();
+                return;
+            }
+            if (Input.GetKeyDown(KeyCode.Escape)) { RequestQuit(); return; }
             if (screen == Screen.Title && Input.GetKeyDown(KeyCode.Return)) { LoadStage(0); return; }
             if (screen == Screen.Intro && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))) { Show(Screen.Playing); return; }
-            if (screen == Screen.Pause && Input.GetKeyDown(KeyCode.Escape)) { Show(Screen.Playing); return; }
-            if ((screen == Screen.Help || screen == Screen.Settings || screen == Screen.Credits) && Input.GetKeyDown(KeyCode.Escape)) { pendingBinding = -1; Show(previous); return; }
             if (screen == Screen.Clear && Input.GetKeyDown(KeyCode.Return)) { if (stageIndex == 9) Show(Screen.Complete); else LoadStage(stageIndex + 1); return; }
             if (screen == Screen.Complete && Input.GetKeyDown(KeyCode.Return)) { Show(Screen.Select); return; }
             if (screen == Screen.Failed && (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(controls[5]))) { Retry(); return; }
             if (screen != Screen.Playing) return;
             if (Input.GetKeyDown(KeyCode.F1)) { previous = screen; Show(Screen.Help); return; }
-            if (Input.GetKeyDown(KeyCode.Escape)) { Show(Screen.Pause); return; }
             if (Input.GetKeyDown(KeyCode.Tab)) { showRoutes = !showRoutes; if (routeLayer != null) routeLayer.style.display = showRoutes ? DisplayStyle.Flex : DisplayStyle.None; }
             if (stageIndex > 0 && Input.GetKeyDown(controls[4])) ToggleRecord();
             if (Input.GetKeyDown(controls[5])) Retry();
@@ -293,6 +298,7 @@ namespace ReplayPartner
             else if (target == Screen.Title) BuildTitle();
             else if (target == Screen.Intro) BuildIntro();
             else if (target == Screen.Pause) BuildPause();
+            else if (target == Screen.QuitConfirm) BuildQuitConfirm();
             else if (target == Screen.Select) BuildSelect();
             else if (target == Screen.Help) BuildHelp();
             else if (target == Screen.Settings) BuildSettings();
@@ -342,7 +348,7 @@ namespace ReplayPartner
             foreach (var button in new[] {
                 ActionButton("設定", () => { previous = screen; Show(Screen.Settings); }),
                 ActionButton("クレジット", () => { previous = screen; Show(Screen.Credits); }),
-                ActionButton("終了", () => Application.Quit()) })
+                ActionButton("終了", RequestQuit) })
             { button.style.flexGrow = 1; button.style.flexBasis = 0; options.Add(button); }
             card.Add(options);
             card.Add(Text("ENTER キーでも開始できます", 13, Muted));
@@ -439,7 +445,8 @@ namespace ReplayPartner
             undoButton.tooltip = "最後に確定した分身を取り消し、部屋を巻き戻します。";
             side.Add(undoButton);
             side.Add(ActionButton("?  ヒントを見る", () => { hintLevel = Mathf.Min(3, hintLevel + 1); RefreshGame(); }));
-            side.Add(ActionButton("一時停止   ESC", () => Show(Screen.Pause)));
+            side.Add(ActionButton("一時停止", () => Show(Screen.Pause)));
+            side.Add(Text("Esc：ゲームの終了確認", 13, Muted));
             side.Add(Spacer(8));
             side.Add(Text($"移動 {controls[0]}/{controls[1]}/{controls[2]}/{controls[3]}・矢印\n記録 {controls[4]} / Tab 足跡の切替", 13, Muted));
             side.Add(ActionButton("遊び方   F1", () => { previous = screen; Show(Screen.Help); }));
@@ -764,6 +771,28 @@ namespace ReplayPartner
             card.Add(ActionButton("遊び方", () => { previous = screen; Show(Screen.Help); }));
             card.Add(ActionButton("設定", () => { previous = screen; Show(Screen.Settings); }));
             card.Add(ActionButton("タイトルへ", () => Show(Screen.Title)));
+            card.Add(ActionButton("ゲームを終了   Esc", RequestQuit));
+        }
+
+        private void RequestQuit()
+        {
+            quitReturn = screen;
+            Show(Screen.QuitConfirm);
+        }
+        private void CancelQuit() => Show(quitReturn);
+        private void QuitGame()
+        {
+            PlayerPrefs.Save();
+            Application.Quit();
+        }
+        private void BuildQuitConfirm()
+        {
+            var card = CenterCard();
+            card.Add(Text("ゲームを終了しますか？", 32, Ink, true));
+            card.Add(Text("クリア進行と設定は保存されています。\nこの部屋の途中の行動記録は終了すると消えます。", 18, Muted));
+            card.Add(Spacer(24));
+            card.Add(ActionButton("終了する   Enter", QuitGame));
+            card.Add(ActionButton("戻る   Esc", CancelQuit, true));
         }
 
         private void BuildSelect()
@@ -806,7 +835,7 @@ namespace ReplayPartner
             card.Add(Spacer(20));
             card.Add(Text("1  WASD / 矢印キーで移動。金色の鍵がある部屋では先に拾います。\n\n2  石箱は隣から押せます。床スイッチ A/B に載せることもできます。\n\n3  E で行動を記録・確定。部屋が巻き戻り、青い分身が同じ動きを再生します。\n\n4  分身にスイッチを任せ、開いた扉の先の出口へ進みます。", 18, Ink));
             card.Add(Spacer(25));
-            card.Add(Text($"リトライ {controls[5]} / 取消・分身削除 {controls[6]} / Esc 一時停止 / Tab 足跡", 15, Muted));
+            card.Add(Text($"リトライ {controls[5]} / 取消・分身削除 {controls[6]} / Esc 終了確認 / Tab 足跡", 15, Muted));
             card.Add(Text($"現在の設定：移動 {controls[0]}/{controls[1]}/{controls[2]}/{controls[3]}・矢印、記録 {controls[4]}。\n足跡は記録時の経路です。箱や門が変わると再生はずれることがあります。", 14, Muted));
             card.Add(Text("斜めにも自由に歩けます。罠は赤で作動、金色で予告。\n体力は3回分。倒れても分身の記録を残して再挑戦できます。", 16, Gold));
             card.Add(ActionButton("戻る", () => Show(previous), true));

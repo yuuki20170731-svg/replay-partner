@@ -35,6 +35,12 @@ namespace ReplayPartner.Editor
                 foreach (string name in new[] { "Title", "Select", "Pause", "Help", "Settings", "Complete", "Credits" })
                     show.Invoke(app, new[] { Enum.Parse(screen, name) });
                 var root = host.GetComponent<UIDocument>().rootVisualElement;
+                show.Invoke(app, new[] { Enum.Parse(screen, "Playing") });
+                var savedSimulation = field.GetValue(app);
+                typeof(ReplayApp).GetMethod("RequestQuit", flags).Invoke(app, null);
+                if (typeof(ReplayApp).GetField("screen", flags).GetValue(app).ToString() != "QuitConfirm") throw new Exception("Quit dialog not shown");
+                typeof(ReplayApp).GetMethod("CancelQuit", flags).Invoke(app, null);
+                if (typeof(ReplayApp).GetField("screen", flags).GetValue(app).ToString() != "Playing" || !ReferenceEquals(savedSimulation, field.GetValue(app))) throw new Exception("Cancel quit must preserve room");
                 if (root == null || root.childCount == 0) throw new Exception("Presentation root is empty");
                 Debug.Log("Replay Partner presentation tests passed: all ten rooms with two clones/trails, result/failure and six menu screens. Not a manual playthrough or pixel-layout test.");
             }

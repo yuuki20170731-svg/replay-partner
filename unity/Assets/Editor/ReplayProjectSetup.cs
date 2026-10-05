@@ -61,7 +61,7 @@ namespace ReplayPartner.Editor
         public static void BuildWebGL() => Build(BuildTarget.WebGL, "Build/WebGL");
 
         [MenuItem("Replay Partner/Build Windows")]
-        public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Build/Windows-RC6/ReplayPartner.exe");
+        public static void BuildWindows() => Build(BuildTarget.StandaloneWindows64, "Build/Windows-RC7/ReplayPartner.exe");
 
         private static void Build(BuildTarget target, string output)
         {
